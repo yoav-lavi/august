@@ -1,0 +1,46 @@
+#=================================#
+# General
+#=================================#
+
+## OS specific
+.DS_Store
+
+## Editors
+.vscode
+.vscode-test
+.idea
+
+## Environment files
+.env
+.env.development.local
+.env.test.local
+.env.production.local
+.env.local
+
+# Direnv
+.envrc
+
+## Coverage
+coverage
+*.lcov
+*.profraw
+.nyc_output
+
+#=================================#
+# Rust
+#=================================#
+
+## Cargo
+debug/
+target/
+/.cargo
+!/.cargo/config.toml
+
+## Backup
+**/*.rs.bk
+
+## MSVC Windows
+*.pdb
+
+## WebAssembly
+pkg/
