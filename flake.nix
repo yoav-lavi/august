@@ -1,5 +1,5 @@
 {
-  description = "Getting started with Rust and WebAssembly";
+  description = "August";
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
@@ -24,11 +24,9 @@
         nativeBuildInputs = with pkgs;
           [
             cargo-make
-            deno
             nodejs
             nodePackages.prettier
             rustup
-            wasm-pack
           ]
           ++ optional (system == systems.aarch64-darwin) [
             darwin.apple_sdk.frameworks.Security
