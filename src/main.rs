@@ -109,7 +109,7 @@ fn root<'a, E: ParseError<&'a str> + ContextError<&'a str>>(input: &'a str) -> I
 fn main() {
     let data = r#"
 
-    .this:.is:.deeply:.nested:.indeed:.how:odd
+    .semi:true+trailingComma:all+singleQuote:true+printwidth:120+tabwidth:2+ignored:.hello:world
 
     "#
     .trim();
