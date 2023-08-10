@@ -61,7 +61,7 @@ fn array<'a, E: ParseError<&'a str> + ContextError<&'a str>>(input: &'a str) -> 
             char('>'),
             cut(terminated(
                 separated_list0(char(','), json_value),
-                alt((tag("^"), tag("\n"), tag(""))),
+                alt((tag("^"), tag(""))),
             )),
         ),
     )(input)
@@ -87,7 +87,7 @@ fn hash<'a, E: ParseError<&'a str> + ContextError<&'a str>>(
                         .map(|(key, value)| (String::from(key), value))
                         .collect()
                 }),
-                alt((tag("^"), tag("\n"), tag(""))),
+                alt((tag("^"), tag(""))),
             )),
         ),
     )(input)
