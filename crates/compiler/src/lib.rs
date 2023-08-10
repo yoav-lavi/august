@@ -1,6 +1,6 @@
 use nom::{
     branch::alt,
-    bytes::complete::{escaped, escaped_transform, tag, take_while},
+    bytes::complete::{escaped, tag},
     character::complete::{alphanumeric1 as alphanumeric, char, none_of, one_of},
     combinator::{cut, map, value},
     error::{context, ContextError, ErrorKind, ParseError},
