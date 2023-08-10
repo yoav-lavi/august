@@ -27,6 +27,7 @@
             nodejs
             nodePackages.prettier
             rustup
+            libiconv
           ]
           ++ optional (system == systems.aarch64-darwin) [
             darwin.apple_sdk.frameworks.Security

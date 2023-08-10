@@ -1,0 +1,12 @@
+[package]
+name = "august-compiler"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+nom = "7.1.3"
+serde = { version = "1.0.183", features = ["derive"] }
+serde_json = "1.0.104"
+toml = "0.7.6"
+serde_yaml = "0.9"
+thiserror = "1.0.44"

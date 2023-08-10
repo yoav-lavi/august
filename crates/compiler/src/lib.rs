@@ -1,4 +1,3 @@
-use colored::Colorize;
 use nom::{
     branch::alt,
     bytes::complete::{escaped, tag, take_while},
@@ -8,12 +7,13 @@ use nom::{
     multi::separated_list0,
     number::complete::double,
     sequence::{preceded, separated_pair, terminated},
-    IResult, Parser,
+    Err, IResult, Parser,
 };
 use serde::Serialize;
 use serde_json as _;
 use std::collections::HashMap;
 use std::str;
+use thiserror::Error;
 use toml as _;
 
 #[derive(Debug, PartialEq, Serialize)]
@@ -53,7 +53,7 @@ fn unquoted_string<'a, E: ParseError<&'a str>>(input: &'a str) -> IResult<&'a st
 fn array<'a, E: ParseError<&'a str> + ContextError<&'a str>>(input: &'a str) -> IResult<&'a str, Vec<JsonValue>, E> {
     context(
         "array",
-        preceded(char('>'), cut(separated_list0(char('+'), json_value))),
+        preceded(char('>'), cut(separated_list0(char(','), json_value))),
     )(input)
 }
 
@@ -71,7 +71,7 @@ fn hash<'a, E: ParseError<&'a str> + ContextError<&'a str>>(
         preceded(
             char('.'),
             cut(terminated(
-                map(separated_list0(char('+'), key_value), |tuple_vec| {
+                map(separated_list0(char(','), key_value), |tuple_vec| {
                     tuple_vec
                         .into_iter()
                         .map(|(key, value)| (String::from(key), value))
@@ -106,39 +106,32 @@ fn root<'a, E: ParseError<&'a str> + ContextError<&'a str>>(input: &'a str) -> I
     .parse(input)
 }
 
-fn main() {
-    let data = r#"
+#[derive(Error, Debug)]
+pub enum CompilerError {
+    #[error("{0}")]
+    CompilationError(String),
+}
 
-    .semi:true+trailingComma:all+singleQuote:true+printwidth:120+tabwidth:2+ignored:.hello:world
+impl<'a> From<Err<(&'a str, ErrorKind)>> for CompilerError {
+    fn from(value: Err<(&'a str, ErrorKind)>) -> Self {
+        Self::CompilationError(value.to_string())
+    }
+}
 
-    "#
-    .trim();
+#[derive(Debug, Clone, Copy)]
+pub enum OutputType {
+    Json,
+    Toml,
+    Yaml,
+}
 
-    println!("\n{}\n\n{data}\n\n{}\n", "Input".bright_cyan(), "Output".bright_cyan());
+pub fn compile(input: &str, output_type: &OutputType) -> Result<String, CompilerError> {
+    let result = root::<(&str, ErrorKind)>(input.trim());
+    let output = result?.1;
 
-    let result = root::<(&str, ErrorKind)>(data);
-
-    let output = result.unwrap().1;
-
-    println!(
-        "{}\n\n{}",
-        "---JSON---".bright_green(),
-        serde_json::to_string_pretty(&output).expect("must parse")
-    );
-
-    println!();
-
-    println!(
-        "{}\n\n{}",
-        "---TOML---".bright_green(),
-        toml::to_string_pretty(&output).expect("must parse")
-    );
-
-    println!();
-
-    println!(
-        "{}\n\n{}",
-        "---YAML---".bright_green(),
-        serde_yaml::to_string(&output).expect("must parse")
-    );
+    Ok(match output_type {
+        OutputType::Json => serde_json::to_string_pretty(&output).expect("must parse"),
+        OutputType::Toml => toml::to_string_pretty(&output).expect("must parse"),
+        OutputType::Yaml => serde_yaml::to_string(&output).expect("must parse"),
+    })
 }
