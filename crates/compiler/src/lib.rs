@@ -1,7 +1,7 @@
 use nom::{
     branch::alt,
-    bytes::complete::{escaped, tag, take_while},
-    character::complete::{alphanumeric1 as alphanumeric, char, one_of},
+    bytes::complete::{escaped, escaped_transform, tag, take_while},
+    character::complete::{alphanumeric1 as alphanumeric, char, none_of, one_of},
     combinator::{cut, map, value},
     error::{context, ContextError, ErrorKind, ParseError},
     multi::separated_list0,
@@ -28,7 +28,7 @@ pub enum JsonValue {
 }
 
 fn parse_str<'a, E: ParseError<&'a str>>(input: &'a str) -> IResult<&'a str, &'a str, E> {
-    escaped(alphanumeric, '\\', one_of("\"n\\"))(input)
+    escaped(none_of(r#"\""#), '\\', one_of(r#"ntbfr""#))(input)
 }
 
 fn boolean<'a, E: ParseError<&'a str>>(input: &'a str) -> IResult<&'a str, bool, E> {
@@ -47,7 +47,7 @@ fn string<'a, E: ParseError<&'a str> + ContextError<&'a str>>(input: &'a str) ->
 }
 
 fn unquoted_string<'a, E: ParseError<&'a str>>(input: &'a str) -> IResult<&'a str, &'a str, E> {
-    take_while(char::is_alphanumeric)(input)
+    alphanumeric(input)
 }
 
 fn any_string<'a, E: ParseError<&'a str> + ContextError<&'a str>>(input: &'a str) -> IResult<&'a str, &'a str, E> {
@@ -70,7 +70,7 @@ fn array<'a, E: ParseError<&'a str> + ContextError<&'a str>>(input: &'a str) -> 
 fn key_value<'a, E: ParseError<&'a str> + ContextError<&'a str>>(
     input: &'a str,
 ) -> IResult<&'a str, (&'a str, JsonValue), E> {
-    separated_pair(alt((string, unquoted_string)), cut(char(':')), json_value).parse(input)
+    separated_pair(any_string, cut(char(':')), json_value).parse(input)
 }
 
 fn hash<'a, E: ParseError<&'a str> + ContextError<&'a str>>(
@@ -106,12 +106,7 @@ fn json_value<'a, E: ParseError<&'a str> + ContextError<&'a str>>(input: &'a str
 }
 
 fn root<'a, E: ParseError<&'a str> + ContextError<&'a str>>(input: &'a str) -> IResult<&'a str, JsonValue, E> {
-    alt((
-        map(hash, JsonValue::Object),
-        map(array, JsonValue::Array),
-        map(null, |_| JsonValue::Null),
-    ))
-    .parse(input)
+    json_value.parse(input)
 }
 
 #[derive(Error, Debug)]
