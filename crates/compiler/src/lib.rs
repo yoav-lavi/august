@@ -97,10 +97,10 @@ fn json_value<'a, E: ParseError<&'a str> + ContextError<&'a str>>(input: &'a str
     alt((
         map(hash, JsonValue::Object),
         map(array, JsonValue::Array),
-        map(any_string, |string| JsonValue::String(string.to_owned())),
         map(double, JsonValue::Number),
         map(boolean, JsonValue::Boolean),
         map(null, |_| JsonValue::Null),
+        map(any_string, |string| JsonValue::String(string.to_owned())),
     ))
     .parse(input)
 }
