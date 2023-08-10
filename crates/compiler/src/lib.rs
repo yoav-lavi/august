@@ -57,7 +57,13 @@ fn any_string<'a, E: ParseError<&'a str> + ContextError<&'a str>>(input: &'a str
 fn array<'a, E: ParseError<&'a str> + ContextError<&'a str>>(input: &'a str) -> IResult<&'a str, Vec<JsonValue>, E> {
     context(
         "array",
-        preceded(char('>'), cut(separated_list0(char(','), json_value))),
+        preceded(
+            char('>'),
+            cut(terminated(
+                separated_list0(char(','), json_value),
+                alt((tag("^"), tag("\n"), tag(""))),
+            )),
+        ),
     )(input)
 }
 
