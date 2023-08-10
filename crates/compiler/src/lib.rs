@@ -20,9 +20,9 @@ use toml as _;
 #[serde(untagged)]
 pub enum JsonValue {
     Null,
-    Str(String),
+    String(String),
     Boolean(bool),
-    Num(f64),
+    Number(f64),
     Array(Vec<JsonValue>),
     Object(HashMap<String, JsonValue>),
 }
@@ -48,6 +48,10 @@ fn string<'a, E: ParseError<&'a str> + ContextError<&'a str>>(input: &'a str) ->
 
 fn unquoted_string<'a, E: ParseError<&'a str>>(input: &'a str) -> IResult<&'a str, &'a str, E> {
     take_while(char::is_alphanumeric)(input)
+}
+
+fn any_string<'a, E: ParseError<&'a str> + ContextError<&'a str>>(input: &'a str) -> IResult<&'a str, &'a str, E> {
+    alt((string, unquoted_string))(input)
 }
 
 fn array<'a, E: ParseError<&'a str> + ContextError<&'a str>>(input: &'a str) -> IResult<&'a str, Vec<JsonValue>, E> {
@@ -87,10 +91,8 @@ fn json_value<'a, E: ParseError<&'a str> + ContextError<&'a str>>(input: &'a str
     alt((
         map(hash, JsonValue::Object),
         map(array, JsonValue::Array),
-        map(alt((string, unquoted_string)), |string| {
-            JsonValue::Str(string.to_owned())
-        }),
-        map(double, JsonValue::Num),
+        map(any_string, |string| JsonValue::String(string.to_owned())),
+        map(double, JsonValue::Number),
         map(boolean, JsonValue::Boolean),
         map(null, |_| JsonValue::Null),
     ))
