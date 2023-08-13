@@ -110,7 +110,7 @@ this:
 
 ## Syntax (current)
 
-- `.` - opens a new object (similar to `{` in JSON`)
+- `.` - opens a new object (similar to `{` in JSON)
 - `:` - sets a value for a key
 - `>` - opens a new list (similar to `[` in JSON)
 - `^` - climb up to the parent scope (object or list)
