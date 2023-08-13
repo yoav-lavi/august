@@ -56,8 +56,6 @@ printwidth: '120'
 
 ### Deeply Nested
 
-Input
-
 ```
 .this:.is:.deeply:.nested:.indeed:.how:odd
 ```
