@@ -8,15 +8,15 @@ Please feel free to open issues with syntax suggestions / general suggestions if
 
 ## Examples (syntax not final)
 
+### Prettier-esque
+
 ```
-Input
-
 .semi:true,trailingComma:all,singleQuote:true,printwidth:120,tabwidth:2,ignored:.hello:world
+````
 
-Output
+JSON Output
 
----JSON---
-
+```json
 {
   "ignored": {
     "hello": "world"
@@ -27,9 +27,11 @@ Output
   "semi": "true",
   "printwidth": "120"
 }
+```
 
----TOML---
+TOML Output
 
+```toml
 tabwidth = "2"
 trailingComma = "all"
 singleQuote = "true"
@@ -38,10 +40,11 @@ printwidth = "120"
 
 [ignored]
 hello = "world"
+```
 
+YAML Output
 
----YAML---
-
+```yaml
 ignored:
   hello: world
 tabwidth: '2'
@@ -51,15 +54,17 @@ semi: 'true'
 printwidth: '120'
 ```
 
-```
+### Deeply Nested
+
 Input
 
+```
 .this:.is:.deeply:.nested:.indeed:.how:odd
+```
 
-Output
+JSON Output
 
----JSON---
-
+```json
 {
   "this": {
     "is": {
@@ -73,15 +78,18 @@ Output
     }
   }
 }
+```
 
----TOML---
+TOML Output
 
+```toml
 [this.is.deeply.nested.indeed]
 how = "odd"
+```
 
+YAML Output
 
----YAML---
-
+```yaml
 this:
   is:
     deeply:
@@ -89,3 +97,4 @@ this:
         indeed:
           how: odd
 ```
+
