@@ -1,6 +1,6 @@
 <h1 align="center"><code>.august:true</code></h1>
 
-August (working name) is an [Emmet](https://github.com/emmetio/emmet)-like language that produces JSON, TOML, or YAML from a single-line concise selector-like syntax. 
+August is an [Emmet](https://github.com/emmetio/emmet)-like language that produces JSON, TOML, or YAML from a single-line concise selector-like syntax. 
 
 August is currently in very early stages. The repository currently contains a CLI under `crates/cli`, which will soon be published in various forms. Editor extensions and a playground will be supported later on.
 
