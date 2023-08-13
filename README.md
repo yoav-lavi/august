@@ -2,7 +2,7 @@
 
 August is an [Emmet](https://github.com/emmetio/emmet)-like language that produces JSON, TOML, or YAML from a single-line concise selector-like syntax.
 
-If you aren't familiar with Emmet, think of August like a snippet or shortcut to quickly typing or editing a document in any of the target languages.
+If you aren't familiar with Emmet, think of August as a snippet or shortcut to quickly typing or editing a document in any of the target languages.
 
 August is currently in very early stages. The repository currently contains a CLI under `crates/cli`, which will soon be published in various forms. Editor extensions and a playground will be supported later on.
 
