@@ -1,6 +1,6 @@
-# August (working title)
+<h1 align="center" style="color:red"><code>.august:true</code></h1>
 
-August is an Emmet-like language that produces JSON, TOML, and YAML (and potentially Nix). It allows you to quickly write selectors to create and edit documents. Other targets supported by `serde` can potentially be supported.
+August (working name) is an Emmet-like language that produces JSON, TOML, and YAML (and potentially Nix). It allows you to quickly write selectors to create and edit documents. Other targets supported by `serde` can potentially be supported.
 
 The current code is a small POC to play with the syntax.
 
